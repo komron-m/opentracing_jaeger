@@ -1,0 +1,22 @@
+{
+  "name": "komron_m/opentracing_jaeger",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "KomronM\\OpentracingJaeger\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "komron-m",
+      "email": "miralizoda.komron@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php-amqplib/php-amqplib": "^3.2",
+    "opentracing/opentracing": "^1.0",
+    "jonahgeorge/jaeger-client-php": "^1.4",
+    "guzzlehttp/guzzle": "^7.0"
+  }
+}

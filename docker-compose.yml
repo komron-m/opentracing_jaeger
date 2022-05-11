@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  rabbit_mq:
+    image: rabbitmq:management
+    ports:
+      - "15672:15672"
+      - "5671:5671"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: secret
+
+  jaeger-all-in-one:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6832:6832/udp"
+      - "6831:6831/udp"
+      - "14250:14250"
+      - "14268:14268"
+      - "14271:14271"
+      - "16686:16686"
+    environment:
+      SPAN_STORAGE_TYPE: badger
+      BADGER_EPHEMERAL: 0
+      BADGER_DIRECTORY_VALUE: /badger/data
+      BADGER_DIRECTORY_KEY: /badger/key

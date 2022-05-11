@@ -1,0 +1,18 @@
+# Simple GET call to demonstrate how traces flow
+GET http://localhost:4000/home
+
+###
+
+# Create `order` to demonstrate full chain of traces between 3 services
+POST http://localhost:4000/order/create
+Content-Type: application/json
+
+{
+  "product_id": "product-identifier(uuid)",
+  "customer_id": "john.doe@example.com"
+}
+
+###
+
+# List orders
+GET http://localhost:4000/order/list
