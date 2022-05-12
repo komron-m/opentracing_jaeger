@@ -8,14 +8,7 @@ import (
 	"github.com/opentracing/opentracing-go/ext"
 	"github.com/streadway/amqp"
 	"log"
-)
-
-// in production these variables should be resolved from .env or some kind of configuration file
-const (
-	rabbitmqHost = "localhost"
-	rabbitmqPort = "5672"
-	rabbitmqUser = "rabbitmq"
-	rabbitmqPass = "secret"
+	"os"
 )
 
 type Publisher struct {
@@ -24,10 +17,13 @@ type Publisher struct {
 }
 
 func NewPublisher() (*Publisher, error) {
+	rabbitmqUser := os.Getenv("RABBITMQ_USER")
+	rabbitmqPass := os.Getenv("RABBITMQ_PASSWORD")
+	rabbitmqHost := os.Getenv("RABBITMQ_HOST")
+	rabbitmqPort := os.Getenv("RABBITMQ_PORT")
+
 	url := fmt.Sprintf("amqp://%s:%s@%s:%s/", rabbitmqUser, rabbitmqPass, rabbitmqHost, rabbitmqPort)
-	conn, err := amqp.DialConfig(url, amqp.Config{
-		Vhost: "/",
-	})
+	conn, err := amqp.Dial(url)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,5 +72,5 @@ func (p *Publisher) Publish(ctx context.Context, eventName string, payload any) 
 		Body:            body,
 	}
 
-	return p.amqpChan.Publish("amq.topic", eventName, false, false, msg)
+	return p.amqpChan.Publish(os.Getenv("RABBITMQ_EXCHANGE_NAME"), eventName, false, false, msg)
 }

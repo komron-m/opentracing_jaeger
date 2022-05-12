@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+const (
+	EventOrderCreated = "a_creator.order.created"
+)
+
 type Order struct {
 	OrderID    string    `json:"order_id"`
 	ProductID  string    `json:"product_id"`
@@ -30,21 +34,21 @@ func CreateOrder(
 	defer span.Finish()
 
 	// make new Order instance
-	o := new(Order)
-	o.OrderID = uuid.NewString()
-	o.ProductID = req.ProductID
-	o.CustomerID = req.CustomerID
-	o.CreatedAt = time.Now()
+	order := new(Order)
+	order.OrderID = uuid.NewString()
+	order.ProductID = req.ProductID
+	order.CustomerID = req.CustomerID
+	order.CreatedAt = time.Now()
 
 	// store in database
-	if err := repo.Store(ctx, o); err != nil {
+	if err := repo.Store(ctx, order); err != nil {
 		return nil, err
 	}
 
 	// emit event
-	if err := p.Publish(ctx, "a_creator.order.created", o); err != nil {
+	if err := p.Publish(ctx, EventOrderCreated, order); err != nil {
 		return nil, err
 	}
 
-	return o, nil
+	return order, nil
 }

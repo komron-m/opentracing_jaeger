@@ -17,6 +17,7 @@
     "php-amqplib/php-amqplib": "^3.2",
     "opentracing/opentracing": "^1.0",
     "jonahgeorge/jaeger-client-php": "^1.4",
-    "guzzlehttp/guzzle": "^7.0"
+    "guzzlehttp/guzzle": "^7.0",
+    "vlucas/phpdotenv": "^5.4"
   }
 }

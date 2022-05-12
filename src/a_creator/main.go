@@ -2,14 +2,21 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/joho/godotenv"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
+	// load ENV vars
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err)
+	}
+
 	// initialize tracer
 	tracer, closer, err := NewJaegerOpentracingTracer()
 	if err != nil {
@@ -73,7 +80,7 @@ func main() {
 		json.NewEncoder(w).Encode(repo.orders)
 	}))
 
-	if err := http.ListenAndServe(":4000", entryPointMid(fakeAuthMid(http.DefaultServeMux))); err != nil {
+	if err := http.ListenAndServe(os.Getenv("APP_ADDR"), entryPointMid(fakeAuthMid(http.DefaultServeMux))); err != nil {
 		log.Fatal(err)
 	}
 }

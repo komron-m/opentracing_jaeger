@@ -5,24 +5,22 @@ import (
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
 	"io"
-)
-
-// in production these variables should be resolved from .env or some kind of configuration file
-const (
-	serviceName  = "a_creator"
-	samplerType  = "const"
-	samplerParam = 1.0
+	"os"
+	"strconv"
 )
 
 func NewJaegerOpentracingTracer() (opentracing.Tracer, io.Closer, error) {
+	sp, _ := strconv.ParseFloat(os.Getenv("JAEGER_SAMPLER_PARAM"), 64)
+	repLogSpans, _ := strconv.ParseBool(os.Getenv("JAEGER_LOGS_ENABLED"))
+
 	cfg := &config.Configuration{
-		ServiceName: serviceName,
+		ServiceName: os.Getenv("JAEGER_SERVICE_NAME"),
 		Sampler: &config.SamplerConfig{
-			Type:  samplerType,
-			Param: samplerParam,
+			Type:  os.Getenv("JAEGER_SAMPLER_TYPE"),
+			Param: sp,
 		},
 		Reporter: &config.ReporterConfig{
-			LogSpans: true,
+			LogSpans: repLogSpans,
 		},
 	}
 

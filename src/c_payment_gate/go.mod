@@ -10,6 +10,7 @@ require (
 
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
+	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect

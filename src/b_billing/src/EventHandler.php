@@ -55,16 +55,16 @@ class EventHandler
 
     /**
      * @throws Exception
+     * build dependency graph
+     * in production, one should use some dependency injection (service container)
      */
     private function resolve(AMQPMessage $msg)
     {
+        $THE_ONLY_TOPIC = "a_creator.order.created";
         $event = $msg->getRoutingKey();
-        if ($event != "a_creator.order.created") {
+        if ($event != $THE_ONLY_TOPIC) {
             throw new \Exception("Handler not found for event: $event");
         }
-
-        // build dependency graph
-        // in production, one should use some dependency injection (service container)
         $repo = new Repo();
         return new BillingService($repo);
     }

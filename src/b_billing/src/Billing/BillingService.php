@@ -58,26 +58,25 @@ class BillingService
         $scope = $tracer->startActiveSpan("BillingService.processBill");
         $span = $scope->getSpan();
 
-        $headers = [];
-        $tracer->inject(
-            $span->getContext(),
-            Formats\HTTP_HEADERS,
-            $headers
-        );
-
-        $headers["Accept"] = "application/json";
-        $headers["x-api-key"] = "secret";
-
         try {
             $client = new Client();
-            $resp = $client->post("http://localhost:4001/process_bill", [
+
+            $headers = [];
+            $tracer->inject(
+                $span->getContext(),
+                Formats\HTTP_HEADERS,
+                $headers
+            );
+
+            $headers["Accept"] = "application/json";
+            $headers["x-api-key"] = getenv("BILL_PROCESSOR_SECRET");
+
+            $resp = $client->post(getenv("BILL_PROCESSOR_URL"), [
                 "headers" => $headers,
                 "json" => $bill->toArray(),
             ]);
 
-            $span = $scope->getSpan();
             $span->setTag("status_code", $resp->getStatusCode());
-
         } catch (Exception $e) {
             $span = $scope->getSpan();
             $span->setTag("error", true);
