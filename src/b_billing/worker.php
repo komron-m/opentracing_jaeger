@@ -8,7 +8,7 @@ use KomronM\OpentracingJaeger\EventHandler;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv::createUnsafeImmutable(__DIR__);
 $dotenv->load();
 
 // establish rabbitmq connection
@@ -16,6 +16,7 @@ $rabbitmqHost = getenv("RABBITMQ_HOST");
 $rabbitmqPort = getenv("RABBITMQ_PORT");
 $rabbitmqUser = getenv("RABBITMQ_USER");
 $rabbitmqPass = getenv("RABBITMQ_PASSWORD");
+
 $connection = new AMQPStreamConnection($rabbitmqHost, $rabbitmqPort, $rabbitmqUser, $rabbitmqPass);
 $channel = $connection->channel();
 
