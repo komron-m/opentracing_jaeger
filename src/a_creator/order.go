@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/opentracing/opentracing-go"
 	"time"
 )
 
@@ -29,10 +28,6 @@ func CreateOrder(
 	repo *Repo,
 	p *Publisher,
 ) (*Order, error) {
-	// request validation skipped for simplicity
-	span, ctx := opentracing.StartSpanFromContext(ctx, "CreateOrder")
-	defer span.Finish()
-
 	// make new Order instance
 	order := new(Order)
 	order.OrderID = uuid.NewString()

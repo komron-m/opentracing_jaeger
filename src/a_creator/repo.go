@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/opentracing/opentracing-go"
 	"sync"
 )
 
@@ -18,9 +17,6 @@ func NewRepo() *Repo {
 }
 
 func (r *Repo) Store(ctx context.Context, o *Order) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "Repo.Store")
-	defer span.Finish()
-
 	r.Lock()
 	defer r.Unlock()
 

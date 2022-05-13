@@ -10,17 +10,17 @@ import (
 )
 
 func NewJaegerOpentracingTracer() (opentracing.Tracer, io.Closer, error) {
-	sp, _ := strconv.ParseFloat(os.Getenv("JAEGER_SAMPLER_PARAM"), 64)
-	repLogSpans, _ := strconv.ParseBool(os.Getenv("JAEGER_LOGS_ENABLED"))
+	samplerParam, _ := strconv.ParseFloat(os.Getenv("JAEGER_SAMPLER_PARAM"), 64)
+	reporterLogSpans, _ := strconv.ParseBool(os.Getenv("JAEGER_LOGS_ENABLED"))
 
 	cfg := &config.Configuration{
 		ServiceName: os.Getenv("JAEGER_SERVICE_NAME"),
 		Sampler: &config.SamplerConfig{
 			Type:  os.Getenv("JAEGER_SAMPLER_TYPE"),
-			Param: sp,
+			Param: samplerParam,
 		},
 		Reporter: &config.ReporterConfig{
-			LogSpans: repLogSpans,
+			LogSpans: reporterLogSpans,
 		},
 	}
 

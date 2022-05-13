@@ -40,10 +40,31 @@ func NewPublisher() (*Publisher, error) {
 }
 
 func (p *Publisher) Publish(ctx context.Context, eventName string, payload any) error {
+	// serialize payload/message to be sent
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	// init message
+	msg := amqp.Publishing{
+		ContentType:     "text/json",
+		ContentEncoding: "utf-8",
+		DeliveryMode:    amqp.Persistent,
+		Body:            body,
+	}
+
+	defaultExchange := os.Getenv("RABBITMQ_EXCHANGE_NAME")
+
+	return p.amqpChan.Publish(defaultExchange, eventName, false, false, msg)
+}
+
+func (p *Publisher) PublishWithTraces(ctx context.Context, eventName string, payload any) error {
 	// create a span
-	spanName := fmt.Sprintf("Publisher.Publish: %s", eventName)
-	span, ctx := opentracing.StartSpanFromContext(ctx, spanName, ext.SpanKindProducer)
+	span, ctx := opentracing.StartSpanFromContext(ctx, "Publisher.Publish", ext.SpanKindProducer)
 	defer span.Finish()
+
+	span.LogKV("event_name", eventName)
 
 	// serialize span context
 	bagItems := map[string]string{}
