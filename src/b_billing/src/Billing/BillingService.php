@@ -17,8 +17,10 @@ class BillingService
 
     public function serve(AMQPMessage $message)
     {
-        $scope = ScopeManager::startActiveSpan("BillingService.serve");
-        ScopeManager::deferClose($scope);
+        $scope = GlobalTracer::get()->startActiveSpan("BillingService.serve");
+        ScopeManager::close($_, function () use ($scope) {
+            $scope->close();
+        });
 
         $body = $message->body;
         $params = json_decode($body, true);
@@ -30,7 +32,10 @@ class BillingService
 
     public function createBill(array $params): Bill
     {
-        ScopeManager::startActiveSelfClosingSpan("BillingService.createBill");
+        $scope = GlobalTracer::get()->startActiveSpan("BillingService.createBill");
+        ScopeManager::close($_, function () use ($scope) {
+            $scope->close();
+        });
 
         $billID = uniqid();
         $orderID = $params["order_id"];
