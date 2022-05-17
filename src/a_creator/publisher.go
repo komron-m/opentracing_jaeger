@@ -40,6 +40,9 @@ func NewPublisher() (*Publisher, error) {
 }
 
 func (p *Publisher) Publish(ctx context.Context, eventName string, payload any) error {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "Publisher.Publish")
+	defer span.Finish()
+
 	// serialize payload/message to be sent
 	body, err := json.Marshal(payload)
 	if err != nil {

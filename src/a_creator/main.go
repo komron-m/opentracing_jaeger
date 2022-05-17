@@ -34,20 +34,32 @@ func main() {
 	defer publisher.conn.Close()
 
 	http.Handle("/order/create", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		span, ctx := opentracing.StartSpanFromContext(r.Context(), "controller")
+		defer span.Finish()
+
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
+			span.LogKV("error_msg", err.Error())
+			span.SetTag("error", true)
+
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		req := new(CreateOrderRequest)
 		if err := json.Unmarshal(body, req); err != nil {
+			span.LogKV("error_msg", err.Error())
+			span.SetTag("error", true)
+
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		order, err := CreateOrder(r.Context(), req, repo, publisher)
+		order, err := CreateOrder(ctx, req, repo, publisher)
 		if err != nil {
+			span.LogKV("error_msg", err.Error())
+			span.SetTag("error", true)
+
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

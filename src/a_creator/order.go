@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/google/uuid"
+	"github.com/opentracing/opentracing-go"
 	"time"
 )
 
@@ -28,6 +29,9 @@ func CreateOrder(
 	repo *Repo,
 	p *Publisher,
 ) (*Order, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "CreateOrder")
+	defer span.Finish()
+
 	// make new Order instance
 	order := new(Order)
 	order.OrderID = uuid.NewString()
@@ -41,7 +45,7 @@ func CreateOrder(
 	}
 
 	// emit event
-	if err := p.Publish(ctx, EventOrderCreated, order); err != nil {
+	if err := p.PublishWithTraces(ctx, EventOrderCreated, order); err != nil {
 		return nil, err
 	}
 

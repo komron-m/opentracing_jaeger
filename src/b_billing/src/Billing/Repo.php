@@ -6,7 +6,7 @@ class Repo
 {
     public function getProductPrice(string $productId, $date): float
     {
-        return floatval(random_int(1, 99));
+        return floatval(random_int(1, 110));
     }
 
     public function storeBill(Bill $bill)
