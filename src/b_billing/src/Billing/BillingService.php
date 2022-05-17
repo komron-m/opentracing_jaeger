@@ -25,8 +25,10 @@ class BillingService
         $body = $message->body;
         $params = json_decode($body, true);
 
+        // first step
         $bill = $this->createBill($params);
 
+        // second step
         $this->processBill($bill);
     }
 

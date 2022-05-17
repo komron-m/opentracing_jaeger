@@ -32,7 +32,10 @@ func ProcessBill(ctx context.Context, req *ProcessBillRequest) error {
 }
 
 // dummy func for demo purpose
-func getPreferredPaymentMethod(ctx context.Context, customerID string) string {
+func getPreferredPaymentMethod(ctx context.Context, _ string) string {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "getPreferredPaymentMethod")
+	defer span.Finish()
+
 	if rand.Int()%2 == 0 {
 		return "CREDIT_CARD"
 	}

@@ -56,11 +56,6 @@ func main() {
 		json.NewEncoder(w).Encode(order)
 	}))
 
-	http.Handle("/order/list", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(repo.orders)
-	}))
-
 	if err := http.ListenAndServe(os.Getenv("APP_ADDR"), entryPointMid(fakeAuthMid(http.DefaultServeMux))); err != nil {
 		log.Fatal(err)
 	}

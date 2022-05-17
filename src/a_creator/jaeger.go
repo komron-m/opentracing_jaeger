@@ -15,10 +15,12 @@ func NewJaegerOpentracingTracer() (opentracing.Tracer, io.Closer, error) {
 
 	cfg := &config.Configuration{
 		ServiceName: os.Getenv("JAEGER_SERVICE_NAME"),
+
 		Sampler: &config.SamplerConfig{
 			Type:  os.Getenv("JAEGER_SAMPLER_TYPE"),
 			Param: samplerParam,
 		},
+
 		Reporter: &config.ReporterConfig{
 			LogSpans: reporterLogSpans,
 		},

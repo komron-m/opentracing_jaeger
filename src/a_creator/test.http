@@ -6,8 +6,3 @@ Content-Type: application/json
   "product_id": "product-identifier(uuid)",
   "customer_id": "john.doe@example.com"
 }
-
-###
-
-# List orders
-GET http://localhost:4000/order/list
