@@ -1,5 +1,7 @@
 ## Description
---
+This repo contains example distributed tracing with [jaeger](https://www.jaegertracing.io).
+
+Presentation file is root directory.
 
 ## Getting started
 
