@@ -52,7 +52,11 @@ func withdraw(ctx context.Context, amount float64, customerID string, method str
 	span.LogFields(log.String("customer_id", customerID))
 
 	if amount > 100. {
-		return fmt.Errorf("not enough balance")
+		requestID := span.BaggageItem("request_id")
+		userID := span.BaggageItem("user_id")
+
+		return fmt.Errorf("request: %s, user: %s, not enough balance", requestID, userID)
 	}
+
 	return nil
 }

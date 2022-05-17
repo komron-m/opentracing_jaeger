@@ -22,7 +22,6 @@ func entryPointMid(next http.Handler) http.Handler {
 
 func fakeAuthMid(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		// extract from headers Bearer {token}
 		// validate {token}
 		// PROFIT !!!!
